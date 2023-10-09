@@ -1,0 +1,116 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import { useRef, useEffect } from "react";
+import videojs from "video.js";
+import "video.js/dist/video-js.css";
+import 'videojs-youtube';
+import { getScyllaDBCluster } from "src/db/scylladb";
+import CssBaseline from '@mui/material/CssBaseline';
+import TopBar from "src/components/menu/TopBar";
+import SideBar from "src/components/menu/SideBar";
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
+
+type Video = {
+    video: {
+        video_id: string,
+        thumbnail: string,
+        title: string,
+        content_type: string,
+        url: string,
+        progress: number
+    }
+}
+
+export async function getServerSideProps(context) {
+    const { videoId, progress } = context.query
+    const cluster = await getScyllaDBCluster()
+    const results = await cluster.execute(`SELECT * FROM streaming.video WHERE id = '${videoId}'`);
+
+    return {
+        props: {
+            video: {
+                video_id: results.rows[0].id,
+                thumbnail: results.rows[0].thumbnail,
+                title: results.rows[0].title,
+                content_type: results.rows[0].content_type,
+                url: results.rows[0].url,
+                progress: progress
+            }
+        }
+    }
+}
+
+const defaultTheme = createTheme();
+
+export default function Watch({ video }: Video) {
+    const videoRef = useRef(null);
+    useEffect(() => {
+        let player: any
+        if (videoRef.current) {
+            player = videojs(videoRef.current, {
+                sources: [
+                    {
+                        src: `${video.url}`,
+                        type: `${video.content_type}`
+                    }
+                ],
+            })
+        }
+        if (player) {
+            /**
+            * SAVE PROGRESS TO WATCH HISTORY
+            */
+            player.on("pause", () => {
+                const userId = "asd"
+                const videoId = video.video_id
+                const progress = player.currentTime()
+                const watchedAt = new Date().toISOString();
+                const payload = { user_id: userId, video_id: videoId, progress: progress, watched_at: watchedAt }
+
+                // insert into db
+                fetch('/api/save-progress', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                })
+            })
+            /**
+            * SET VIDEO START TIME
+            */
+            player.on("loadstart", () => {
+                player.currentTime(video.progress)
+            })
+        }
+    })
+    return (
+        <ThemeProvider theme={defaultTheme}>
+            <Box sx={{ display: 'flex' }}>
+                <CssBaseline />
+                <TopBar title="Watch video"/>
+                <SideBar />
+                {/* Page content */}
+                <Box
+                    component="main"
+                    sx={{
+                        backgroundColor: (theme) =>
+                            theme.palette.mode === 'light'
+                                ? theme.palette.grey[100]
+                                : theme.palette.grey[900],
+                        flexGrow: 1,
+                        height: '100vh',
+                        overflow: 'auto',
+                    }}
+                >
+                    <Toolbar/>
+                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                        <h1>{video.title}</h1>
+                        <video controls ref={videoRef} className="video-js" />
+                    </Container>
+                </Box>
+            </Box>
+        </ThemeProvider>
+    );
+}
