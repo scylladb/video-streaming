@@ -2,7 +2,6 @@
 This repository contains a sample video streaming application built with [Blitz.js](https://blitzjs.com/), [Material-UI](https://mui.com/material-ui/) and [ScyllaDB](https://www.scylladb.com/).
 
 ## Prerequisites
-* [CQLsh]()
 * [NodeJS](https://nodejs.org/en)
 * [ScyllaDB Cloud account](https://cloud.scylladb.com/account/sign-up)
 
