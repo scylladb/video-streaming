@@ -62,7 +62,7 @@ export default function Watch({ video }: Video) {
             * SAVE PROGRESS TO WATCH HISTORY
             */
             player.on("pause", () => {
-                const userId = "asd"
+                const userId = "user1"
                 const videoId = video.video_id
                 const progress = player.currentTime()
                 const watchedAt = new Date().toISOString();

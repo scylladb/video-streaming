@@ -9,6 +9,10 @@ function readCql(cql) {
                                                                         .filter(s => s);
 }
 
+function readCSV(filepath) {
+    return fs.readFileSync(path.join(__dirname, filepath), 'utf8').split('\n')
+}
+
 async function getClient() {
     const client = new cassandra.Client({
         contactPoints: [process.env.SCYLLA_HOSTS,],
@@ -26,7 +30,6 @@ async function main() {
     const client = await getClient();
 
     const SCHEMA = readCql('schema');
-    const SAMPLE = readCql('sample_data');
 
     console.log('Creating keyspace and tables...');
     for (const query of SCHEMA) {
@@ -34,8 +37,14 @@ async function main() {
     }
 
     console.log('Inserting sample data...');
-    for (const query of SAMPLE) {
-        await client.execute(query);
+    const SAMPLE = readCSV("sample_data.csv")
+    const query = `INSERT INTO streaming.video (id,created_at,content_type,thumbnail,title,url)
+                   VALUES (?, ?, ?, ?, ?, ?)`
+    for (const row of SAMPLE) {
+        const values = row.split(",")
+        if (values.length > 1) {
+            await client.execute(query, values, {prepare: true});
+        }
     }
 
     console.log('Done.');

@@ -18,7 +18,7 @@ const defaultTheme = createTheme();
 export async function getServerSideProps() {
   const cluster = await getScyllaDBCluster()
   // fetch video IDs
-  const userId = 'asd'
+  const userId = 'user1'
   const watchedVideos = await cluster.execute("SELECT video_id, progress FROM watch_history WHERE user_id = ? LIMIT 9;", [userId])
   let watchedVideoProgress = new Map()
   for (const row of watchedVideos.rows) {
