@@ -14,7 +14,7 @@ git clone https://github.com/zseta/video-streaming
 
 ### Configuration file
 
-Create a new configuration file named `.env.local` in the project's root folder. This fill contains your ScyllaDB cluster credentials:
+Create a new configuration file named `.env.local` in the project's root folder. This file contains your ScyllaDB cluster credentials:
 ```
 # .env.local
 SCYLLA_HOSTS=node-0.aws_eu_central_1.xxxxx.clusters.scylla.cloud
