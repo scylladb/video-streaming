@@ -17,11 +17,12 @@ git clone https://github.com/zseta/video-streaming
 Create a new configuration file named `.env.local` in the project's root folder. This file contains your ScyllaDB cluster credentials:
 ```
 # .env.local
-SCYLLA_HOSTS=node-0.aws_eu_central_1.xxxxx.clusters.scylla.cloud
-SCYLLA_USER=scylla
-SCYLLA_PASSWD=xxxxx
-SCYLLA_KEYSPACE=streaming
-SCYLLA_DATACENTER=AWS_EU_CENTRAL_1
+APP_BASE_URL="http://localhost:8000"
+SCYLLA_HOSTS="node-0.aws_eu_central_1.xxxxx.clusters.scylla.cloud"
+SCYLLA_USER="scylla"
+SCYLLA_PASSWD="xxxxx"
+SCYLLA_KEYSPACE="streaming"
+SCYLLA_DATACENTER="AWS_EU_CENTRAL_1"
 ```
 
 You can copy the `SCYLLA_HOSTS`, `SCYLLA_USER`, `SCYLLA_PASSWD` and `SCYLLA_DATACENTER` values from your ScyllaDB Cloud dashboard. Keyspace should be `streaming`.

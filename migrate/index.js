@@ -5,8 +5,8 @@ require('dotenv').config({ path: '.env.local' });
 
 function readCql(cql) {
     return fs.readFileSync(path.join(__dirname, `${cql}.cql`), 'utf8').split(';')
-                                                                        .map(s => s.trim())
-                                                                        .filter(s => s);
+        .map(s => s.trim())
+        .filter(s => s);
 }
 
 function readCSV(filepath) {
@@ -29,6 +29,8 @@ async function getClient() {
 async function main() {
     const client = await getClient();
 
+    await client.execute('DROP KEYSPACE IF EXISTS streaming');
+
     const SCHEMA = readCql('schema');
 
     console.log('Creating keyspace and tables...');
@@ -43,7 +45,7 @@ async function main() {
     for (const row of SAMPLE) {
         const values = row.split(",")
         if (values.length > 1) {
-            await client.execute(query, values, {prepare: true});
+            await client.execute(query, values, { prepare: true });
         }
     }
 
