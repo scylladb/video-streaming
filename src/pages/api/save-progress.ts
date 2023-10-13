@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getScyllaDBCluster } from "src/db/scylladb";
 import { WatchHistory } from "src/types";
 
-export async function saveProgress(
+export default async function saveProgress(
     req: NextApiRequest,
     res: NextApiResponse<any>
 ) {
@@ -30,5 +30,3 @@ export async function saveProgress(
         .status(201)
         .json({});
 }
-
-export default saveProgress

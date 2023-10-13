@@ -27,7 +27,12 @@ export async function getServerSideProps() {
   }
 }
 
-export default function AllVideos({ videos }: {videos: Video[]}) {
+interface AllVideosProps {
+  videos: Video[]
+}
+
+export default function AllVideos({ videos }: AllVideosProps) {
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>

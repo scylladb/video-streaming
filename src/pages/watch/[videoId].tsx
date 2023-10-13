@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -6,7 +7,6 @@ import Toolbar from '@mui/material/Toolbar';
 import { useEffect, useRef } from "react";
 import SideBar from "src/components/menu/SideBar";
 import TopBar from "src/components/menu/TopBar";
-import { getScyllaDBCluster } from "src/db/scylladb";
 import { Video } from 'src/types';
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
@@ -18,17 +18,9 @@ export async function getServerSideProps(context) {
     const progress = context.query.progress ?? 0
     const videoId = context.params.videoId
 
-    const cluster = await getScyllaDBCluster()
-    const results = await cluster.execute(`SELECT * FROM streaming.video WHERE id = '${videoId}'`);
-
-    const video: Video = {
-        video_id: results.rows[0].id,
-        thumbnail: results.rows[0].thumbnail,
-        title: results.rows[0].title,
-        content_type: results.rows[0].content_type,
-        url: results.rows[0].url,
-        progress: progress
-    }
+    let response = await fetch(process.env.APP_BASE_URL + `/api/videos/${videoId}`);
+    let video: Video = await response.json();
+    video.progress = progress
 
     return { props: video }
 }
@@ -98,14 +90,14 @@ export default function Watch(video: Video) {
                 >
                     <Toolbar />
                     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                        <div style={{
+                        <Box sx={{
                             display: 'flex',
                             alignItems: 'center',
                             flexDirection: 'column'
                         }}>
-                            <h1>{video.title}</h1>
+                            <Typography variant="h4" component="h1">{video.title}</Typography>
                             <video controls ref={videoRef} className="video-js" height={'500'} />
-                        </div>
+                        </Box>
                     </Container>
                 </Box>
             </Box>

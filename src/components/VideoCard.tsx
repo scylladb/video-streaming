@@ -10,7 +10,6 @@ import { Video } from 'src/types';
 export default function VideoCard({video}: {video: Video}) {
   const watchUrl = `/watch/${video.video_id}?progress=${video.progress}`
   const progressPercentage = Math.floor((video.progress / video.duration) * 100);
-  console.log(video);
 
   return (
     <Card>

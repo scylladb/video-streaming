@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material';
+import { Alert, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -25,7 +25,7 @@ export async function getServerSideProps() {
   }
 }
 
-function noVideoAvailable() {
+function NoVideoAvailable() {
   return (
     <Alert severity='warning'>
       No video watched so far. Go to the <Link href="/">home</Link> and watch something!
@@ -33,7 +33,11 @@ function noVideoAvailable() {
   )
 }
 
-export default function ContinueWatching({ videos }: { videos: Video[] }) {
+interface ContinueWatchingProps {
+  videos: Video[]
+}
+
+export default function ContinueWatching({ videos }: ContinueWatchingProps) {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -55,9 +59,11 @@ export default function ContinueWatching({ videos }: { videos: Video[] }) {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <h1>List of videos which you started</h1>
+            <Typography variant="h3" component="h1" sx={{ mb: 4}}>
+              List of videos which you started
+            </Typography>
 
-            {videos.length === 0 ? noVideoAvailable() : ''}
+            {!videos.length && <NoVideoAvailable/>}
 
             <Grid container spacing={3}>
               {/* Videos */}
