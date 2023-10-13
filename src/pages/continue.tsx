@@ -63,12 +63,7 @@ export default function ContinueWatching({ videos }: { videos: Video[] }) {
               {/* Videos */}
               {videos.map((video) =>
                 <Grid item xs={12} md={4} lg={3} key={video.video_id}>
-                  <VideoCard
-                    title={video.title}
-                    imgSrc={video.thumbnail}
-                    videoId={video.video_id}
-                    progress={video.progress}
-                  />
+                  <VideoCard video={video}/>
                 </Grid>
               )}
             </Grid>
