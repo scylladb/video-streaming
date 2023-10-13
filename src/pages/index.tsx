@@ -17,8 +17,8 @@ const defaultTheme = createTheme();
 
 export async function getServerSideProps() {
   
-  const continueUrl = process.env.APP_BASE_URL + '/api/list-videos';
-  const videosResponse: Video[] = await (await fetch(continueUrl)).json()
+  const listVideosUrl = process.env.APP_BASE_URL + '/api/list-videos';
+  const videosResponse: Video[] = await (await fetch(listVideosUrl)).json()
 
   return {
     props: {
@@ -27,7 +27,7 @@ export async function getServerSideProps() {
   }
 }
 
-export default function AllVideos({ videos }) {
+export default function AllVideos({ videos }: {videos: Video[]}) {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -53,12 +53,7 @@ export default function AllVideos({ videos }) {
               {/* Videos */}
               {videos.map((video) =>
                 <Grid item xs={12} md={4} lg={3} key={video.video_id}>
-                  <VideoCard 
-                    title={video.title}
-                    imgSrc={video.thumbnail}
-                    videoId={video.video_id}
-                    progress={video.progress}
-                  />
+                  <VideoCard video={video}></VideoCard>
                 </Grid>
               )}
             </Grid>

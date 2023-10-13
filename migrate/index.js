@@ -39,9 +39,10 @@ async function main() {
     }
 
     console.log('Inserting sample data...');
+
     const SAMPLE = readCSV("sample_data.csv")
-    const query = `INSERT INTO streaming.video (id,created_at,content_type,thumbnail,title,url)
-                   VALUES (?, ?, ?, ?, ?, ?)`
+    const query = `INSERT INTO streaming.video (id,created_at,content_type,thumbnail,title,url,duration)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)`
     for (const row of SAMPLE) {
         const values = row.split(",")
         if (values.length > 1) {

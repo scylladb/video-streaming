@@ -1,9 +1,12 @@
+import internal from "stream"
+
 export interface Video {
     video_id: string,
     thumbnail: string,
     title: string,
     content_type: string,
     url: string,
+    duration: internal,
     progress: ?number
 }
 

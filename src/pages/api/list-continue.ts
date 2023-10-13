@@ -38,6 +38,7 @@ export default async function listContinue(
             thumbnail: row.thumbnail,
             title: row.title,
             content_type: row.content_type,
+            duration: row.duration,
             url: row.url,
             progress: watchedVideoProgress.get(row.id)
         };

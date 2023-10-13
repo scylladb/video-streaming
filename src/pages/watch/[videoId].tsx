@@ -61,7 +61,7 @@ export default function Watch(video: Video) {
                 const payload = { user_id: userId, video_id: videoId, progress: progress, watched_at: watchedAt }
 
                 // insert into db
-                fetch(process.env.APP_BASE_URL + '/api/save-progress', {
+                fetch('/api/save-progress', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
