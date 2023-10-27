@@ -1,39 +1,38 @@
-import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Footer from "src/components/Footer";
+import SideBar from "src/components/menu/SideBar";
+import TopBar from "src/components/menu/TopBar";
 import VideoCard from 'src/components/VideoCard';
-import { getScyllaDBCluster } from "src/db/scylladb";
-import Footer from "src/components/Footer"
-import TopBar from "src/components/menu/TopBar"
-import SideBar from "src/components/menu/SideBar"
+import { Video } from 'src/types';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
+
 const defaultTheme = createTheme();
 
 export async function getServerSideProps() {
-  const cluster = await getScyllaDBCluster()
-  let data: Object[] = [];
-  const results = await cluster.execute("SELECT thumbnail, title, id FROM streaming.video LIMIT 9;");
-  for (const row of results.rows) {
-    data.push({
-      video_id: row.id,
-      thumbnail: row.thumbnail,
-      title: row.title,
-    })
-  }
+  
+  const listVideosUrl = process.env.APP_BASE_URL + '/api/list-videos';
+  const videosResponse: Video[] = await (await fetch(listVideosUrl)).json()
+
   return {
     props: {
-      videos: data
+      videos: videosResponse
     }
   }
 }
 
-export default function AllVideos({ videos }) {
+interface AllVideosProps {
+  videos: Video[]
+}
+
+export default function AllVideos({ videos }: AllVideosProps) {
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -59,12 +58,7 @@ export default function AllVideos({ videos }) {
               {/* Videos */}
               {videos.map((video) =>
                 <Grid item xs={12} md={4} lg={3} key={video.video_id}>
-                  <VideoCard 
-                    title={video.title}
-                    imgSrc={video.thumbnail}
-                    videoId={video.video_id}
-                    progress={0}
-                  />
+                  <VideoCard video={video}></VideoCard>
                 </Grid>
               )}
             </Grid>

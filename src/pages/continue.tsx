@@ -1,56 +1,49 @@
-import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import { Alert, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Link from 'next/link';
+import Footer from "src/components/Footer";
+import SideBar from "src/components/menu/SideBar";
+import TopBar from "src/components/menu/TopBar";
 import VideoCard from 'src/components/VideoCard';
-import { getScyllaDBCluster } from "src/db/scylladb";
-import Footer from "src/components/Footer"
-import TopBar from "src/components/menu/TopBar"
-import SideBar from "src/components/menu/SideBar"
+import { Video } from 'src/types';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export async function getServerSideProps() {
-  const cluster = await getScyllaDBCluster()
-  // fetch video IDs
-  const userId = 'user1'
-  const watchedVideos = await cluster.execute("SELECT video_id, progress FROM watch_history WHERE user_id = ? LIMIT 9;", [userId])
-  let watchedVideoProgress = new Map()
-  for (const row of watchedVideos.rows) {
-    watchedVideoProgress.set(row.video_id, row.progress)
-  }
-  // fetch video content
-  let data: Object[] = [];
-  const query = 'SELECT thumbnail, title, id FROM video WHERE id in ?'
-  const videoIDs = Array.from(watchedVideoProgress.keys())
-  const results = await cluster.execute(query, [videoIDs], { prepare: true })
-  for (const row of results.rows) {
-    data.push({
-      video_id: row.id,
-      thumbnail: row.thumbnail,
-      title: row.title,
-      progress: watchedVideoProgress.get(row.id)
-    })
-  }
+  const continueUrl = process.env.APP_BASE_URL + '/api/list-continue';
+  const videosResponse: Partial<Video[]> = await (await fetch(continueUrl)).json();
+
   return {
-    props: {
-      videos: data
-    }
+    props: { videos: videosResponse }
   }
 }
 
-export default function ContinueWatching({ videos }) {
+function NoVideoAvailable() {
+  return (
+    <Alert severity='warning'>
+      No video watched so far. Go to the <Link href="/">home</Link> and watch something!
+    </Alert>
+  )
+}
+
+interface ContinueWatchingProps {
+  videos: Video[]
+}
+
+export default function ContinueWatching({ videos }: ContinueWatchingProps) {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <TopBar title="Continue watching"/>
-        <SideBar/>
+        <TopBar title="Continue watching" />
+        <SideBar />
         {/* Page content */}
         <Box
           component="main"
@@ -66,16 +59,17 @@ export default function ContinueWatching({ videos }) {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Typography variant="h3" component="h1" sx={{ mb: 4}}>
+              List of videos which you started
+            </Typography>
+
+            {!videos.length && <NoVideoAvailable/>}
+
             <Grid container spacing={3}>
               {/* Videos */}
               {videos.map((video) =>
                 <Grid item xs={12} md={4} lg={3} key={video.video_id}>
-                  <VideoCard 
-                    title={video.title}
-                    imgSrc={video.thumbnail}
-                    videoId={video.video_id}
-                    progress={video.progress}
-                  />
+                  <VideoCard video={video}/>
                 </Grid>
               )}
             </Grid>

@@ -7,6 +7,7 @@ CREATE TABLE streaming.video (
     url text,
     thumbnail text,
     created_at timestamp,
+    duration int,
     PRIMARY KEY (id, created_at)
 );
 

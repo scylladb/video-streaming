@@ -1,18 +1,21 @@
-import * as React from 'react';
-import Image from 'next/image';
+import { LinearProgress } from '@mui/material';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Image from 'next/image';
+import { Video } from 'src/types';
 
-export default function VideoCard({ title, imgSrc, videoId, progress }: { title: string; imgSrc: string; videoId: string; progress: number }) {
-  const watchUrl = `/watch?videoId=${videoId}&progress=${progress||0}`
+export default function VideoCard({video}: {video: Video}) {
+  const watchUrl = `/watch/${video.video_id}?progress=${video.progress}`
+  const progressPercentage = Math.floor((video.progress / video.duration) * 100);
+
   return (
     <Card>
       <Image
-        alt={title}
-        src={imgSrc}
+        alt={video.title}
+        src={video.thumbnail}
         width={640}
         height={480}
         style={{
@@ -21,10 +24,13 @@ export default function VideoCard({ title, imgSrc, videoId, progress }: { title:
           objectFit: 'cover',
         }}
       />
+      <LinearProgress variant="determinate" value={progressPercentage} />
       <CardContent>
-        <Typography gutterBottom variant="body1" component="div">
-          {title}
+        
+        <Typography gutterBottom variant="body1" component="div" style={{minHeight:72}}>
+          {video.title}
         </Typography>
+        
       </CardContent>
       <CardActions>
         <Button href={ watchUrl } size="small">Watch</Button>

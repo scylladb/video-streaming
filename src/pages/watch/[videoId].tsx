@@ -1,49 +1,33 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import { useRef, useEffect } from "react";
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import { useEffect, useRef } from "react";
+import SideBar from "src/components/menu/SideBar";
+import TopBar from "src/components/menu/TopBar";
+import { Video } from 'src/types';
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import 'videojs-youtube';
-import { getScyllaDBCluster } from "src/db/scylladb";
-import CssBaseline from '@mui/material/CssBaseline';
-import TopBar from "src/components/menu/TopBar";
-import SideBar from "src/components/menu/SideBar";
-import Toolbar from '@mui/material/Toolbar';
-import Container from '@mui/material/Container';
 
-type Video = {
-    video: {
-        video_id: string,
-        thumbnail: string,
-        title: string,
-        content_type: string,
-        url: string,
-        progress: number
-    }
-}
+const userId = "scylla-user"
 
 export async function getServerSideProps(context) {
-    const { videoId, progress } = context.query
-    const cluster = await getScyllaDBCluster()
-    const results = await cluster.execute(`SELECT * FROM streaming.video WHERE id = '${videoId}'`);
+    const progress = context.query.progress ?? 0
+    const videoId = context.params.videoId
 
-    return {
-        props: {
-            video: {
-                video_id: results.rows[0].id,
-                thumbnail: results.rows[0].thumbnail,
-                title: results.rows[0].title,
-                content_type: results.rows[0].content_type,
-                url: results.rows[0].url,
-                progress: progress
-            }
-        }
-    }
+    let response = await fetch(process.env.APP_BASE_URL + `/api/videos/${videoId}`);
+    let video: Video = await response.json();
+    video.progress = progress
+
+    return { props: video }
 }
 
 const defaultTheme = createTheme();
 
-export default function Watch({ video }: Video) {
+export default function Watch(video: Video) {
     const videoRef = useRef(null);
     useEffect(() => {
         let player: any
@@ -62,7 +46,7 @@ export default function Watch({ video }: Video) {
             * SAVE PROGRESS TO WATCH HISTORY
             */
             player.on("pause", () => {
-                const userId = "user1"
+
                 const videoId = video.video_id
                 const progress = player.currentTime()
                 const watchedAt = new Date().toISOString();
@@ -89,7 +73,7 @@ export default function Watch({ video }: Video) {
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
-                <TopBar title="Watch video"/>
+                <TopBar title="Watch video" />
                 <SideBar />
                 {/* Page content */}
                 <Box
@@ -104,10 +88,16 @@ export default function Watch({ video }: Video) {
                         overflow: 'auto',
                     }}
                 >
-                    <Toolbar/>
+                    <Toolbar />
                     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                        <h1>{video.title}</h1>
-                        <video controls ref={videoRef} className="video-js" />
+                        <Box sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'column'
+                        }}>
+                            <Typography variant="h4" component="h1">{video.title}</Typography>
+                            <video controls ref={videoRef} className="video-js" height={'500'} />
+                        </Box>
                     </Container>
                 </Box>
             </Box>
