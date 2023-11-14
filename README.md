@@ -1,4 +1,4 @@
-# Video streaming - Blitz.js + ScyllaDB application
+# Video streaming - Next.js + ScyllaDB application
 This repository contains a sample video streaming application built with [Blitz.js](https://blitzjs.com/), [Material-UI](https://mui.com/material-ui/) and [ScyllaDB](https://www.scylladb.com/).
 
 ## Prerequisites
