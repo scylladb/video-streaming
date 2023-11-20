@@ -31,19 +31,13 @@ export const secondaryListItems = (
     <ListSubheader component="div" inset>
       Developer resources
     </ListSubheader>
-    <ListItemButton component="a" href="#">
+    <ListItemButton component="a" href="https://github.com/scylladb/video-streaming">
       <ListItemIcon>
         <GitHubIcon />
       </ListItemIcon>
       <ListItemText primary="GitHub repo" />
     </ListItemButton>
-    <ListItemButton component="a" href="#">
-      <ListItemIcon>
-        <SchoolIcon />
-      </ListItemIcon>
-      <ListItemText primary="Tutorial" />
-    </ListItemButton>
-    <ListItemButton component="a" href="#">
+    <ListItemButton component="a" href="https://docs.scylladb.com/stable/">
       <ListItemIcon>
         <ArticleIcon />
       </ListItemIcon>
