@@ -9,7 +9,7 @@ This repository contains a sample video streaming application built with [Blitz.
 
 **Clone the repository**
 ```
-git clone https://github.com/zseta/video-streaming
+git clone https://github.com/scylladb/video-streaming
 ```
 
 ### Configuration file
