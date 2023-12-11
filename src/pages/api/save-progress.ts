@@ -7,7 +7,7 @@ export default async function saveProgress(
     res: NextApiResponse<any>
 ) {
     if (!req.body) {
-        return res.status(422).json({ error: 'Failed to save progress into server.' });
+        return res.status(422).json({ error: 'Failed to save progress into database.' });
     }
 
     const payload: WatchHistory = req.body;

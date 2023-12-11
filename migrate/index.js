@@ -40,13 +40,16 @@ async function main() {
 
     console.log('Inserting sample data...');
 
-    const SAMPLE = readCSV("sample_data.csv")
+    const SAMPLE = readCSV("sample_data.csv");
     const query = `INSERT INTO streaming.video (id,created_at,content_type,thumbnail,title,url,duration)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)`
+                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const recentVideosQuery = `INSERT INTO streaming.recent_videos (id,created_at,content_type,thumbnail,title,url,duration)
+                                VALUES (?, ?, ?, ?, ?, ?, ?)`;
     for (const row of SAMPLE) {
-        const values = row.split(",")
+        const values = row.split(",");
         if (values.length > 1) {
             await client.execute(query, values, { prepare: true });
+            await client.execute(recentVideosQuery, values, { prepare: true });
         }
     }
 
