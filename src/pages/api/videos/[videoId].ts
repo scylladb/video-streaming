@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { useRouter } from "next/router";
 import { getScyllaDBCluster, parseVideo } from "src/db/scylladb";
 import { Video } from "src/types";
 
