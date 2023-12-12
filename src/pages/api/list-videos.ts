@@ -10,8 +10,8 @@ export default async function listVideos(
     res: NextApiResponse<Video[]>
 ) {
     const cluster = await getScyllaDBCluster();
-    const queryVideoDates = "SELECT id, top10(created_at) AS date FROM recent_videos;"
-    const query = `SELECT * FROM recent_videos
+    const queryVideoDates = "SELECT id, top10(created_at) AS date FROM recent_videos_view;"
+    const query = `SELECT * FROM recent_videos_view
                     WHERE created_at IN ?
                     LIMIT 10`;
     const videoDates = await cluster.execute(queryVideoDates);                

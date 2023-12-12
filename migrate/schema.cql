@@ -19,16 +19,10 @@ CREATE TABLE streaming.watch_history (
 	PRIMARY KEY (user_id, video_id)
 );
 
-CREATE TABLE streaming.recent_videos (
-    id text,
-    content_type text,
-    title text,
-    url text,
-    thumbnail text,
-    created_at timestamp,
-    duration int,
-    PRIMARY KEY (created_at)
-);
+CREATE MATERIALIZED VIEW streaming.recent_videos_view AS
+    SELECT * FROM streaming.video
+    WHERE created_at IS NOT NULL
+    PRIMARY KEY (created_at, id);
 
 USE streaming;
 
@@ -80,3 +74,4 @@ CREATE OR REPLACE AGGREGATE top10(timestamp)
 SFUNC state_f
 STYPE list<timestamp>
 REDUCEFUNC reduce_f;
+
