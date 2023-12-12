@@ -8,7 +8,7 @@ export  default async function getVideo(
 ) {
 
     const cluster = await getScyllaDBCluster()
-    const result = await cluster.execute(`SELECT * FROM streaming.video WHERE id = ?`, [req.query.videoId]);
+    const result = await cluster.execute(`SELECT * FROM video WHERE id = ?`, [req.query.videoId]);
     const fetchedVideo = result.rows[0];
     if (!fetchedVideo) {
         return res.status(404);
