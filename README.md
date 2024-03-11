@@ -13,6 +13,7 @@ git clone https://github.com/scylladb/video-streaming
 ```
 
 ### Configuration file
+
 Create a new configuration file named `.env.local` in the project's root folder. This file contains your ScyllaDB cluster credentials:
 ```
 # .env.local
