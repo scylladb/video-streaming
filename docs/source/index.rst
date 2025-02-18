@@ -13,7 +13,8 @@
   :image: /_static/img/scylla-cloud-mascot.png
   :button_icon: icon-github
   :button_url: https://github.com/scylladb/video-streaming
-  :button_text: GitHub repository
+  :button_style: bold
+  :button_text: Source code
 
   Sample video streaming application built with ScyllaDB and NextJS.
 
@@ -69,8 +70,3 @@
    Data model <data-model>
    Designing the data model - blogpost <https://www.scylladb.com/2024/01/09/build-a-low-latency-video-streaming-app/>
    GitHub repository <https://github.com/scylladb/video-streaming>
-
-
-
-
-
