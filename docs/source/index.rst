@@ -1,17 +1,17 @@
 :full-width:
+:landing:
 :hide-sidebar:
 :hide-secondary-sidebar:
 :hide-version-warning:
 :hide-pre-content:
 :hide-post-content:
-:landing:
 
 .. title:: Video streaming sample app
 
 .. hero-box::
   :title: Build a video streaming application with ScyllaDB
   :image: /_static/img/scylla-cloud-mascot.png
-  :button_icon: fa fa-github
+  :button_icon: icon-github
   :button_url: https://github.com/scylladb/video-streaming
   :button_text: GitHub repository
 
@@ -19,11 +19,13 @@
 
 .. raw:: html
 
-  <div class="landing__content landing__content">
+  <div class="landing__content">
 
 .. raw:: html
 
   <div class="topics-grid grid-container full">
+
+.. raw:: html
 
   <div class="grid-x grid-margin-x">
 
@@ -31,7 +33,7 @@
 .. topic-box::
   :title: Getting started
   :link: getting-started
-  :icon: scylla-icon scylla-icon--getting-started
+  :icon: icon-play-circle
   :class: large-4
   :anchor: Get started
 
@@ -40,7 +42,7 @@
 .. topic-box::
   :title: Data model
   :link: data-model
-  :icon: scylla-icon scylla-icon--circe
+  :icon: icon-database
   :class: large-4
   :anchor: Learn more
 
@@ -48,7 +50,7 @@
 
 .. topic-box::
   :title: Designing the data model - blog
-  :icon: scylla-icon scylla-icon--blog
+  :icon: icon-edit
   :link: https://www.scylladb.com/2024/01/09/build-a-low-latency-video-streaming-app/
   :class: large-4,small-12
   :anchor: Read the article
